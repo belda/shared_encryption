@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Secret Sharing with QR Codes</title>
     <!-- Add CSS and JavaScript library references here -->
+    <style>
+        #decryptButton {
+            font-size: 20px;
+            padding: 15px 30px;
+            width: 200px;
+            height: 60px;
+            /* Additional styling */
+        }
+    </style>
 </head>
 <body>
     <div id="encryptionSection">
@@ -66,7 +75,7 @@
           <!-- Button to decrypt -->
           <p>
             <button type="button" id="resetKey">Reset</button>
-            <button type="button" id="decrypt">Decrypt</button>
+            <button type="button" id="decrypt" style="">Decrypt</button>
           </p>
         </form>
         <p id="decryptedMessage"></p>
