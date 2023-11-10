@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Sharing with QR Codes</title>
+    <!-- Add CSS and JavaScript library references here -->
+</head>
+<body>
+    <div id="encryptionSection">
+        <h1>Secret Sharing with QR Codes</h1>
+        <p>This site is using Shamir's Secret Sharing to allow safe sharing of keys in a
+        limited trust environment. The encrypted message can not be decrypted without the
+        threshold number of keys, but still allows for some parts being not present.</p>
+
+        <h2>Encrypt</h2>
+        <!-- Form for encryption -->
+        <form>
+          <!-- Input for message -->
+          <p>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required placeholder="Write your ASCII meassage to be encrypted here" rows="4" cols="90"></textarea>
+          </p>
+          <!-- Input for number of shares -->
+          <p>
+            <label for="shares">Number of shares:</label>
+            <input type="number" id="shares" name="shares" required placeholder="Enter the number of shares to be generated">
+          </p>
+          <!-- Input for threshold -->
+          <p>
+            <label for="threshold">Threshold:</label>
+            <input type="number" id="threshold" name="threshold" required placeholder="Enter the minimum number of shares required to decrypt">
+          </p>
+
+          <!-- Button to generate QR codes -->
+          <p>
+            <button type="button" id="generateQR">Generate QR Codes</button>
+          </p>
+
+        </form>
+
+        <!-- Display QR codes -->
+        <div id="encoded_data"></div>
+    </div>
+
+
+    <div id="decryptionSection">
+        <h2>Decrypt</h2>
+        <!-- Form for decryption -->
+        <p>
+            <label for="encryptedMessage">Message:</label>
+            <textarea id="encryptedMessage" name="encryptedMessage" required placeholder="Your encrypted message goes here" rows="4" cols="90"></textarea>
+        </p>
+        <!-- The form sends the user to this page with # and that stores the key in the local storage. then you need to press the decrypt button. -->
+        <p>Number of loaded keys : <span id="num_loaded_keys">0</span></p>
+        <form>
+          <!-- Input for key -->
+          <p>
+            <label for="key">Key:</label>
+            <input type="text" id="key" name="key" required placeholder="Enter the key to decrypt">
+            <button type="button" id="loadKey">Load Key</button>
+          </p>
+
+
+
+
+          <!-- Button to decrypt -->
+          <p>
+            <button type="button" id="resetKey">Reset</button>
+            <button type="button" id="decrypt">Decrypt</button>
+          </p>
+        </form>
+        <p id="decryptedMessage"></p>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/secrets.js/secrets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <!-- Load jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/crypto_logic.js"></script>
+</body>
+</html>
