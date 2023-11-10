@@ -121,6 +121,7 @@ $(document).ready(function() {
       for (var i = 0; i < shares.length; i++) {
         console.log("Share " + i + ": " + shares[i]);
         $("#encoded_data").append($("<h3>Share " + i + ": " + shares[i] + "</h3>"));
+        console.log(build_url(encrypted_message.combined, shares[i]));
         add_qr_code_to_page(build_url(encrypted_message.combined, shares[i]));
       }
 
@@ -141,7 +142,7 @@ $(document).ready(function() {
         console.log("recoveredKey: " + recoveredKey);
         var decryptedMessage = decryptMessage(encrypted_message, recoveredKey);
         console.log("Decrypted Message:", decryptedMessage);
-        $("#decrypted_message").text(decryptedMessage);
+        $("#decryptedMessage").text(decryptedMessage);
   } );
 
   $("#loadKey").click(function() {
