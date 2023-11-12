@@ -3,71 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Secret Sharing with QR Codes</title>
-    <style>
-        .large {
-            font-size: 20px;
-            padding: 15px 30px;
-            width: 200px;
-            height: 60px;
-        }
-
-        /* Style the tab */
-        .tab {
-          overflow: hidden;
-          border: 1px solid #ccc;
-          background-color: #f1f1f1;
-        }
-
-        /* Style the buttons inside the tab */
-        .tab button {
-          background-color: inherit;
-          float: left;
-          border: none;
-          outline: none;
-          cursor: pointer;
-          padding: 14px 16px;
-          transition: 0.3s;
-          font-size: 17px;
-        }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-          background-color: #ddd;
-        }
-
-        /* Create an active/current tablink class */
-        .tab button.active {
-          background-color: #ccc;
-        }
-
-        /* Style the tab content */
-        .tabcontent {
-          display: none;
-          padding: 6px 12px;
-          border: 1px solid #ccc;
-          border-top: none;
-        }
-
-        .messageinput {
-            width: 100%;
-            height: 60px;
-        }
-        .note {
-            font-size: .9em;
-            color: #555;
-        }
-
-        input[type="number"] {
-            width: 60px;
-        }
-
-        /* Responsive styling */
-        @media screen and (max-width: 600px) {
-            .qr_code_container {
-                width: 100%;
-            }
-        }
-    </style>
+    <!-- page icon for modern browsers -->
+    <link rel="icon" type="image/png" href="img/favicon.png"/>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>Secret Sharing with QR Codes</h1>
@@ -80,12 +18,35 @@
 
     <div id="AboutSection" class="tabcontent">
         <h2>About</h2>
-        <p>This site is using Shamir's Secret Sharing to allow safe sharing of keys in a
-        limited trust environment. The encrypted message can not be decrypted without the
-        threshold number of keys, but still allows for some parts being not present.</p>
+        <p>This is a simple tool for sharing secrets safely with multiple people.</p>
+
+        <h3>What is this?</h3>
+        <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">Shamir's Secret Sharing</a> is a method for splitting a secret, like a password, into pieces.</li>
+            <li>Imagine a secret is a puzzle, and you give each trusted person a piece. Only when a certain number of these pieces are put together, the secret is revealed. This ensures that no single person can access the secret alone.</li>
+            <li>This tool allows you to split a secret into pieces, and then encode each piece as a QR code. You can then print these QR codes and distribute them to your trusted people. When you need to access the secret, you can scan the QR codes and the secret will be revealed.</li>
+        </ul>
+        <img src="img/illustration.png" class="illustration"/>
+
+        <h3>Why?</h3>
+        <p>
+            There are scenarios where having only 1 key to decrypt a message is not sufficient and at the same time
+            splitting the keys in half might pose risk of loosing such a key.
+            For example, you want to encrypt a message and give the decryption key to your family members.
+            You want to make sure that if one of them loses the key, the message is still accessible.
+            But you don't want to have to collect all the keys every time you want to decrypt the message and at the same time
+            you don't want to have to trust any single person with the key.
+        </p>
+        <h3>How safe is it?</h3>
+        <ul>
+            <li>The secret is encrypted using <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> with a random key.</li>
+            <li>The key is then split using <a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">Shamir's Secret Sharing</a> into multiple pieces. It has <a href="https://en.wikipedia.org/wiki/Information-theoretic_security">Information-theoretic security</a></li>
+            <li>The QR codes contain the whole encrypted message, only enough keys are required</li>
+            <li><strong>Nothing is stored on the server!</strong> This app runs locally and no webserver is logging the keys (hashtag part of url)</li>
+        </ul>
 
         <h3>Licence on code</h3>
-        <p>The code is licenced under MIT licence. You can find the code on <a href="https://github.com/belda/shared_encryption>GitHub</a>.</p>
+        <p>The code is licenced under MIT licence. You can find the code on <a href="https://github.com/belda/shared_encryption">GitHub</a>.</p>
     </div>
 
     <div id="encryptionSection" class="tabcontent">

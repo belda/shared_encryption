@@ -1,44 +1,25 @@
-// JavaScript functions for encryption, decryption, and handling URL fragments
-
-// Function to handle URL fragment and push it into local storage array of keys
-window.onload = function() {
-    initializeLocalStorageSet("keys");
-
-    if (window.location.hash) {
-        const data = parseFragmentParameters(window.location.hash);
-        if (data.message && data.key_share) {
-            localStorage.setItem("encrypted", data.message);
-            addToLocalStorageSet("keys", data.key_share);
-            openTab("decryptionSection");
-        }
-    }
-}
-
+//Javascipt for the crypto page and control of tabs
 
 function openTab(evt, tabName=null) {
-  var i, tabcontent, tablinks;
+    var i, tabcontent, tablinks;
     if (tabName == null) {
         tabName = $(evt.target).data("target");
         console.info(tabName);
     }
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
 
-  window.location.hash = tabName;
+    window.location.hash = tabName;
 }
 
-// Default open tab
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById("AboutSection").click();
-});
 
 
 // Function to initialize the set in local storage
@@ -172,11 +153,23 @@ function reset() {
 }
 
 $(document).ready(function() {
+
+    initializeLocalStorageSet("keys");
+    // Function to handle URL fragment and push it into local storage array of keys
+    if (window.location.hash) {
+        const data = parseFragmentParameters(window.location.hash);
+        if (data.message && data.key_share) {
+            localStorage.setItem("encrypted", data.message);
+            addToLocalStorageSet("keys", data.key_share);
+            openTab("decryptionSection");
+        }
+    }
+
     $(".tablinks").click(openTab);
     $(".tablinks[data-target=AboutSection]").click();
 
 
-  $("#generateQR").click(function() {
+    $("#generateQR").click(function() {
       var encrypted_message = encryptMessage($('#message').val());
       var num_shares = $('#shares').val()*1;
       var threshold = $('#threshold').val()*1;
@@ -193,17 +186,17 @@ $(document).ready(function() {
         add_qr_code_to_page(build_url(encrypted_message.combined, shares[i]));
       }
 
-  });
+    });
 
-  $("#num_loaded_keys").text(getLocalStorageSet("keys").length);
+    $("#num_loaded_keys").text(getLocalStorageSet("keys").length);
 
-  if (localStorage.getItem("encrypted")) {
+    if (localStorage.getItem("encrypted")) {
         $("#encryptedMessage").val(localStorage.getItem("encrypted"));
-  }
+    }
 
-  $("#decrypt").click( decryptAction );
+    $("#decrypt").click( decryptAction );
 
-  $("#loadKey").click(function() {
+    $("#loadKey").click(function() {
         var share = $("#key").val();
         addToLocalStorageSet("keys", share);
         $("#num_loaded_keys").text(getLocalStorageSet("keys").length);
@@ -211,8 +204,8 @@ $(document).ready(function() {
         if ($("#encryptedMessage").val() != "") {
             localStorage.setItem("encrypted", $("#encryptedMessage").val());
         }
-  });
+    });
 
-  $("#resetKey").click(reset);
+    $("#resetKey").click(reset);
 });
 
