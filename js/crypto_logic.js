@@ -14,6 +14,30 @@ window.onload = function() {
 }
 
 
+function openTab(evt, tabName=null) {
+  var i, tabcontent, tablinks;
+    if (tabName == null) {
+        tabName = $(evt.target).data("target");
+        console.info(tabName);
+    }
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Default open tab
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById("AboutSection").click();
+});
+
+
 // Function to initialize the set in local storage
 function initializeLocalStorageSet(key) {
     if (!localStorage.getItem(key)) {
@@ -107,8 +131,47 @@ function add_qr_code_to_page(url) {
 }
 
 
+function decryptAction() {
+    var encrypted_message = localStorage.getItem("encrypted");
+    console.log("encrypted_message: " + encrypted_message);
+    if (!encryptedMessage) {
+        alert("Encrypted message is empty or not present. You need to load the encrypted message and the minimum number of keys.");
+        return;
+    }
+
+    var shares = getLocalStorageSet("keys");
+    console.log("shares: ", shares);
+    if (shares.length == 0) {
+        alert("You have not loaded any decryption key.")
+    }
+
+    try {
+        var recoveredKey = recoverKey(shares);
+        console.log("recoveredKey: " + recoveredKey);
+        var decryptedMessage = decryptMessage(encrypted_message, recoveredKey);
+        console.log("Decrypted Message:", decryptedMessage);
+        if (!decryptedMessage) {
+            alert("Decrypted message is empty. Please check, that you have the required amount of keys, that you have the decryption message and that you are trying to decrypt only 1 message at a time. ");
+        }
+    } catch (e) {
+        console.log(e);
+        alert("Problem decrypting message. Please check, that you have the required amount of keys, that you have the decryption message and that you are trying to decrypt only 1 message at a time.\n "+e);
+    }
+    $("#decryptedMessage").text(decryptedMessage);
+
+}
+
+function reset() {
+    localStorage.clear();
+    $("#num_loaded_keys").text(0);
+    $("#encryptedMessage, #key").val("");
+    window.location.hash = "";
+}
 
 $(document).ready(function() {
+    $(".tablinks").click(openTab);
+
+
   $("#generateQR").click(function() {
       var encrypted_message = encryptMessage($('#message').val());
       var num_shares = $('#shares').val()*1;
@@ -133,17 +196,7 @@ $(document).ready(function() {
         $("#encryptedMessage").val(localStorage.getItem("encrypted"));
   }
 
-  $("#decrypt").click(function() {
-        var encrypted_message = localStorage.getItem("encrypted");
-        console.log("encrypted_message: " + encrypted_message);
-        var shares = getLocalStorageSet("keys");
-        console.log("shares: ", shares);
-        var recoveredKey = recoverKey(shares);
-        console.log("recoveredKey: " + recoveredKey);
-        var decryptedMessage = decryptMessage(encrypted_message, recoveredKey);
-        console.log("Decrypted Message:", decryptedMessage);
-        $("#decryptedMessage").text(decryptedMessage);
-  } );
+  $("#decrypt").click( decryptAction );
 
   $("#loadKey").click(function() {
         var share = $("#key").val();
@@ -155,9 +208,6 @@ $(document).ready(function() {
         }
   });
 
-  $("#resetKey").click(function (){
-      localStorage.clear();
-      $("#num_loaded_keys").text(0);
-  });
+  $("#resetKey").click(reset);
 });
 
