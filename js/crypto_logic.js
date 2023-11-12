@@ -153,6 +153,8 @@ function reset() {
 }
 
 $(document).ready(function() {
+    $(".tablinks").click(openTab);
+
 
     initializeLocalStorageSet("keys");
     // Function to handle URL fragment and push it into local storage array of keys
@@ -161,12 +163,13 @@ $(document).ready(function() {
         if (data.message && data.key_share) {
             localStorage.setItem("encrypted", data.message);
             addToLocalStorageSet("keys", data.key_share);
-            openTab("decryptionSection");
+            $(".tablinks[data-target=decryptionSection]").click();
+        } else {
+            $(".tablinks[data-target=AboutSection]").click();
         }
+    } else {
+        $(".tablinks[data-target=AboutSection]").click();
     }
-
-    $(".tablinks").click(openTab);
-    $(".tablinks[data-target=AboutSection]").click();
 
 
     $("#generateQR").click(function() {
