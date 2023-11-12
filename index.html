@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Secret Sharing with QR Codes</title>
-    <!-- Add CSS and JavaScript library references here -->
     <style>
-        #decrypt {
+        .large {
             font-size: 20px;
             padding: 15px 30px;
             width: 200px;
             height: 60px;
-            /* Additional styling */
         }
 
         /* Style the tab */
@@ -50,9 +48,24 @@
           border-top: none;
         }
 
+        .messageinput {
+            width: 100%;
+            height: 60px;
+        }
+        .note {
+            font-size: .9em;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 60px;
+        }
+
         /* Responsive styling */
         @media screen and (max-width: 600px) {
-          .tab button { font-size: 12px; }
+            .qr_code_container {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -70,75 +83,84 @@
         <p>This site is using Shamir's Secret Sharing to allow safe sharing of keys in a
         limited trust environment. The encrypted message can not be decrypted without the
         threshold number of keys, but still allows for some parts being not present.</p>
+
+        <h3>Licence on code</h3>
+        <p>The code is licenced under MIT licence. You can find the code on <a href="https://github.com/belda/shared_encryption>GitHub</a>.</p>
     </div>
 
     <div id="encryptionSection" class="tabcontent">
         <h2>Encrypt</h2>
+        <p>In order to safely split your secret into multiple parts, follow these steps.</p>
         <!-- Form for encryption -->
         <form>
           <!-- Input for message -->
-          <p>
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" required placeholder="Write your ASCII meassage to be encrypted here" rows="4" cols="90"></textarea>
-          </p>
+          <h3>1. Enter your secret message you wish to encrypt.</h3>
+          <div>
+            <textarea id="message" name="message" class="messageinput" required placeholder="Write your ASCII meassage to be encrypted here"></textarea>
+          </div>
           <!-- Input for number of shares -->
+          <h3>2. Enter how you want to split it</h3>
           <p>
-            <label for="shares">Number of shares:</label>
-            <input type="number" id="shares" name="shares" required placeholder="Enter the number of shares to be generated">
+            I want to split the secret into
+              <input type="number" id="shares" name="shares" required placeholder="num. keys" title="Total number of keys generated">
+              keys and require minimum of <input type="number" id="threshold" name="threshold" required placeholder="threshold" title="how many keys is the minimum to decrypt"> keys
+              to decrypt the message.
           </p>
-          <!-- Input for threshold -->
-          <p>
-            <label for="threshold">Threshold:</label>
-            <input type="number" id="threshold" name="threshold" required placeholder="Enter the minimum number of shares required to decrypt">
-          </p>
+          <p class="note">If you have more keys it will still unlock, however with less the information will be lost.</p>
 
           <!-- Button to generate QR codes -->
+          <h3>3. Generate the parts of the key</h3>
           <p>
-            <button type="button" id="generateQR">Generate QR Codes</button>
+            <button type="button" id="generateQR" class="large">Generate</button>
           </p>
 
         </form>
 
         <!-- Display QR codes -->
-        <div id="encoded_data"></div>
+        <h3>4. Distribute the keys</h3>
+        <p class="note">The keys are generated randomly and are not stored on the server. Transfer them safely using e2e encryption. From here on onwards their ways should be separate.</p>
+        <div id="encoded_data"><i>--no keys generated yet--</i></div>
     </div>
 
 
     <div id="decryptionSection" class="tabcontent">
         <h2>Decrypt</h2>
+        <p>To decrypt the message you have 2 ways. </p>
+        <h3>Scan the QR codes</h3>
+        <p>Use your mobile phone on available codes and after all are scanned tap decrypt.</p>
+        <p class="note">Every time you scan a code it this page opens and stores the code in your browser. Once you have enough codes scanned (threshold) you can press decrypt to get the message.</p>
+        <h3>Manual input</h3>
+        <p>1. Enter the encrypted message</p>
         <!-- Form for decryption -->
-        <p>
-            <label for="encryptedMessage">Message:</label>
-            <textarea id="encryptedMessage" name="encryptedMessage" required placeholder="Your encrypted message goes here" rows="4" cols="90"></textarea>
-        </p>
-        <!-- The form sends the user to this page with # and that stores the key in the local storage. then you need to press the decrypt button. -->
-        <p>Number of loaded keys : <span id="num_loaded_keys">0</span></p>
         <form>
+          <div>
+            <textarea id="encryptedMessage" name="encryptedMessage" class="messageinput" required placeholder="Your encrypted message goes here"></textarea>
+          </div>
+          <!-- The form sends the user to this page with # and that stores the key in the local storage. then you need to press the decrypt button. -->
+
           <!-- Input for key -->
+          <p>2. Enter key shares one by one and hit load key</p>
           <p>
-            <label for="key">Key:</label>
-            <input type="text" id="key" name="key" required placeholder="Enter the key to decrypt">
-            <button type="button" id="loadKey">Load Key</button>
+                <input type="text" id="key" name="key" required placeholder="Enter the key to decrypt">
+                <button type="button" id="loadKey">Load Key</button>
           </p>
 
 
-
-
+            <p>Number of loaded keys : <span id="num_loaded_keys">0</span></p>
           <!-- Button to decrypt -->
           <p>
             <button type="button" id="resetKey">Reset</button>
-            <button type="button" id="decrypt" style="">Decrypt</button>
+            <button type="button" id="decrypt" class="large">Decrypt</button>
           </p>
         </form>
-        <p id="decryptedMessage"></p>
+        <p id="decryptedMessage" ></p>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/secrets.js/secrets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-    <!-- Load jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script src="js/crypto_logic.js"></script>
 </body>
 </html>

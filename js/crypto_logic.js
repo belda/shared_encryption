@@ -9,6 +9,7 @@ window.onload = function() {
         if (data.message && data.key_share) {
             localStorage.setItem("encrypted", data.message);
             addToLocalStorageSet("keys", data.key_share);
+            openTab("decryptionSection");
         }
     }
 }
@@ -30,6 +31,8 @@ function openTab(evt, tabName=null) {
   }
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
+
+  window.location.hash = tabName;
 }
 
 // Default open tab
@@ -170,6 +173,7 @@ function reset() {
 
 $(document).ready(function() {
     $(".tablinks").click(openTab);
+    $(".tablinks[data-target=AboutSection]").click();
 
 
   $("#generateQR").click(function() {
@@ -179,11 +183,12 @@ $(document).ready(function() {
       var shares = createShares(encrypted_message.key, num_shares, threshold);
 
       console.log("Encrypted message: " + encrypted_message.combined, "Key: " + encrypted_message.key);
-      $("#encoded_data").append($("<p>Encrypted Message: " + encrypted_message.combined + "</p>"));
+      $("#encoded_data").text("");
+      $("#encoded_data").append($("<p>Encrypted Message: </p><textarea class='messageinput' disabled>" + encrypted_message.combined + "</textarea>"));
 
       for (var i = 0; i < shares.length; i++) {
         console.log("Share " + i + ": " + shares[i]);
-        $("#encoded_data").append($("<h3>Share " + i + ": " + shares[i] + "</h3>"));
+        $("#encoded_data").append($("<h4>Share " + i + ": <span>" + shares[i] + "</span></h4>"));
         console.log(build_url(encrypted_message.combined, shares[i]));
         add_qr_code_to_page(build_url(encrypted_message.combined, shares[i]));
       }
